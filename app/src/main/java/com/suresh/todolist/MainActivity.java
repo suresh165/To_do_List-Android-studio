@@ -44,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
 
                 final EditText editText = viewInput.findViewById(R.id.edt_title);
                 final EditText edt_description = viewInput.findViewById(R.id.edt_description);
-
                 new AlertDialog.Builder(MainActivity.this)
                         .setView(viewInput)
                         .setTitle("Add note")
+                        .setCancelable(false)
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -55,16 +55,20 @@ public class MainActivity extends AppCompatActivity {
                                 String title = editText.getText().toString();
                                 String description = edt_description.getText().toString();
 
-                                Note note = new Note(title,description);
-
-                                boolean inInserted = new NoteHandler(MainActivity.this).create(note);
-                                if (inInserted){
-                                    Toast.makeText(MainActivity.this, "Note saved", Toast.LENGTH_SHORT).show();
-                                    loadNotes();
-                                }else {
-                                    Toast.makeText(MainActivity.this, "Unable to save the note", Toast.LENGTH_SHORT).show();
+                                if (title.isEmpty() || description.isEmpty()){
+                                    Toast.makeText(MainActivity.this, "All Field Required *", Toast.LENGTH_SHORT).show();
+                                }else if (!title.isEmpty() && !description.isEmpty()){
+                                    Note note = new Note(title,description);
+                                    boolean inInserted = new NoteHandler(MainActivity.this).create(note);
+                                    if (inInserted){
+                                        Toast.makeText(MainActivity.this, "Note saved", Toast.LENGTH_SHORT).show();
+                                        loadNotes();
+                                    }else {
+                                        Toast.makeText(MainActivity.this, "Unable to save the note", Toast.LENGTH_SHORT).show();
+                                    }
+                                    dialogInterface.cancel();
                                 }
-                                dialogInterface.cancel();
+
                             }
                         }).show();
 
